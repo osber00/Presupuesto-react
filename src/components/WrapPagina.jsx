@@ -5,7 +5,7 @@ function WrapPagina({children}) {
         <div className='app-preloader-inner relative inline-block h-48 w-48'></div>
       </div>
       <div
-        id='root'
+        id=''
         className='min-h-100vh flex grow bg-slate-50 dark:bg-navy-900'>
         <main className='main-content w-full px-[var(--margin-x)] pb-8'>
           <div className='mt-4 grid grid-cols-12 gap-4 sm:mt-5 sm:gap-5 lg:mt-6 lg:gap-6'>

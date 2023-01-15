@@ -1,7 +1,21 @@
 
+import { useEffect, useState } from 'react';
 import {formatearMoneda} from '../helpers'
 
-function InfoPresupuesto({presupuesto}) {
+function InfoPresupuesto({presupuesto,gastos}) {
+
+  const [disponible, setDisponible] = useState(0)
+  const [gastado, setGastado] = useState(0)
+
+  useEffect(()=>{
+    const totalGastos = gastos.reduce((total, gasto) => Number(gasto.cantidad) + total, 0)
+    const totalDisponible = presupuesto - totalGastos
+    /* console.log(typeof totalGastos);
+    console.log( typeof totalDisponible); */
+    setGastado(totalGastos)
+    setDisponible(totalDisponible)
+  },[gastos])
+
   return (
     <div className='card bg-gradient-to-br from-purple-500 to-indigo-600 px-4 pb-4 sm:px-5'>
       <div className='flex items-center justify-between py-3 text-white'>
@@ -22,7 +36,7 @@ function InfoPresupuesto({presupuesto}) {
               <div className='flex h-7 w-7 items-center justify-center rounded-full bg-black/20 text-white'>
                 <i className="fa fa-angle-right"></i>
               </div>
-              <p className='text-base font-medium text-white'>{formatearMoneda(0)}</p>
+              <p className='text-base font-medium text-white'>{formatearMoneda(disponible)}</p>
             </div>
           </div>
           <div>
@@ -31,7 +45,7 @@ function InfoPresupuesto({presupuesto}) {
               <div className='flex h-7 w-7 items-center justify-center rounded-full bg-black/20 text-white'>
               <i className="fa fa-angle-down"></i>
               </div>
-              <p className='text-base font-medium text-white'>{formatearMoneda(0)}</p>
+              <p className='text-base font-medium text-white'>{formatearMoneda(gastado)}</p>
             </div>
           </div>
         </div>

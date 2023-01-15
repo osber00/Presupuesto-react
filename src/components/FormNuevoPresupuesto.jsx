@@ -18,7 +18,7 @@ function FormNuevoPresupuesto({ presupuesto, setPresupuesto, setPresupuestoValid
   }
 
   return (
-    <form onSubmit={handleFormulario}>
+    <form onSubmit={handleFormulario} className="bg-slate-200 py-10">
       <div className='relative flex flex-col items-center justify-center'>
         <div className='absolute right-0 top-0 -mt-8 hidden max-w-xs p-4 lg:block'></div>
         <h2 className='mt-8 text-xl font-medium text-slate-600 dark:text-navy-100 lg:text-2xl'>
