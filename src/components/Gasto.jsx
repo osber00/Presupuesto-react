@@ -31,6 +31,14 @@ function Gasto({ gasto }) {
             </a>
           </div>
           <p className='text-xs+ mt-4'>Registro: {formatearFecha(fecha)}</p>
+          <div className=''>
+            <button className='btn mr-2 bg-primary/10 mt-2 font-medium text-primary hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:bg-accent-light/10 dark:text-accent-light dark:hover:bg-accent-light/20 dark:focus:bg-accent-light/20 dark:active:bg-accent-light/25'>
+              Editar
+            </button>
+            <button className='btn bg-error/10 font-medium text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25'>
+              Eliminar
+            </button>
+          </div>
         </div>
       </div>
     </>
