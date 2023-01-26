@@ -1,29 +1,38 @@
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import Alerta from "./Alerta";
 
-function ModalGasto({ modal, setModal, registrarGastos }) {
+function ModalGasto({ modal, setModal, registrarGastos, setGastoEdicion, gastoEdicion }) {
   const [nombre, setNombre] = useState("");
   const [cantidad, setCantidad] = useState("");
   const [categoria, setCategoria] = useState("");
   const [mensaje, setMensaje] = useState("");
 
+  useEffect(()=>{
+    if(Object.keys(gastoEdicion).length > 0 ){
+      setNombre(gastoEdicion.nombre)
+      setCantidad(gastoEdicion.cantidad)
+      setCategoria(gastoEdicion.categoria)
+    }
+  },[gastoEdicion])
+
   const handleFormulario = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if ([nombre, cantidad, categoria].includes("")) {
       setMensaje("Todos los datos son requeridos");
-      return;
+      return
     }
-    const datos = { nombre, cantidad, categoria };
+    const datos = { nombre, cantidad, categoria }
     registrarGastos(datos);
-    cerrarModal();
+    cerrarModal()
   };
 
   const cerrarModal = () => {
-    setNombre("");
-    setCantidad("");
-    setCategoria("");
-    setMensaje("");
-    setModal("false");
+    setNombre("")
+    setCantidad("")
+    setCategoria("")
+    setMensaje("")
+    setModal("false")
+    setGastoEdicion({})
   };
 
   return (
