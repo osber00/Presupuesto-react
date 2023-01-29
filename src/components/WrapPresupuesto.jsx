@@ -7,13 +7,14 @@ function WrapPresupuesto({
   setPresupuesto,
   presupuestoValido,
   setPresupuestoValido,
-  gastos
+  gastos,
+  setResetarApp
 }) {
 
   return (
     <>
       {presupuestoValido ? (
-        <InfoPresupuesto presupuesto={presupuesto} gastos={gastos}></InfoPresupuesto>
+        <InfoPresupuesto presupuesto={presupuesto} gastos={gastos} setResetarApp={setResetarApp}></InfoPresupuesto>
       ) : (
         <FormNuevoPresupuesto
           presupuesto={presupuesto}

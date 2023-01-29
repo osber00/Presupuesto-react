@@ -29,7 +29,7 @@ function FormNuevoPresupuesto({ presupuesto, setPresupuesto, setPresupuestoValid
             className='form-input peer h-12 w-full rounded border border-slate-300 bg-slate-50 px-4 py-2 pl-9 text-base placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-900 dark:hover:border-navy-400 dark:focus:border-accent'
             placeholder='Escriba una cifra'
             type='number'
-            value={presupuesto}
+            value={presupuesto > 0 && presupuesto}
             onChange={(e)=>setPresupuesto(Number(e.target.value))}
           />
           <div className='absolute left-0 top-0 flex h-12 w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent'>

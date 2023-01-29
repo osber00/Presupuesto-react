@@ -1,39 +1,111 @@
 import { useEffect, useState } from "react";
 
-import Gastos from "./components/Gastos"
-import WrapPresupuesto from "./components/WrapPresupuesto"
-import WrapPagina from "./components/WrapPagina"
-import ModalGasto from "./components/ModalGasto"
-import { generarId } from "./helpers"
+import Gastos from "./components/Gastos";
+import WrapPresupuesto from "./components/WrapPresupuesto";
+import WrapPagina from "./components/WrapPagina";
+import ModalGasto from "./components/ModalGasto";
+import { generarId } from "./helpers";
+import Filtro from "./components/Filtro";
+import ModalResetApp from "./components/ModalResetApp";
 
 function App() {
-  const [presupuesto, setPresupuesto] = useState("")
-  const [presupuestoValido, setPresupuestoValido] = useState(false)
-  const [gastos, setGastos] = useState([])
-  const [modal, setModal] = useState("false")
+  const [presupuesto, setPresupuesto] = useState(
+    Number(localStorage.getItem("presupuesto")) ?? 0
+  );
+  const [presupuestoValido, setPresupuestoValido] = useState(false);
+  const [gastos, setGastos] = useState(
+    localStorage.getItem("gastos")
+      ? JSON.parse(localStorage.getItem("gastos"))
+      : []
+  );
+  const [modal, setModal] = useState("false");
   const [gastoEdicion, setGastoEdicion] = useState({})
+  const [filtro, setFiltro] = useState(
+    localStorage.getItem("filtro") ? localStorage.getItem("filtro") : ""
+  );
+  const [gastosCategoria, setGastosCategoria] = useState([])
+  const [resetarApp, setResetarApp] = useState("false")
 
-  useEffect(()=>{
-    if(Object.keys(gastoEdicion).length > 0){
+  useEffect(() => {
+    if (Object.keys(gastoEdicion).length > 0) {
       //console.log('Gasto edición tiene elemento')
-      setModal("true")
+      setModal("true");
     }
-  },[gastoEdicion])
+  }, [gastoEdicion]);
 
+  //Registrar Presupuesto en LocalStorage
+  useEffect(() => {
+    localStorage.setItem("presupuesto", presupuesto ?? 0);
+  }, [presupuesto]);
+
+  //Registrar Gastos en LocalStorage
+  useEffect(() => {
+    localStorage.setItem("gastos", JSON.stringify(gastos) ?? []);
+  }, [gastos]);
+
+  //Recuperar Presupuesto de LocalStorage
+  useEffect(() => {
+    const presupuestoLS = localStorage.getItem("presupuesto") ?? 0;
+    if (presupuestoLS > 0) {
+      setPresupuestoValido(true);
+    }
+  }, []);
+
+  //Registrar filtro al LocalStorage
+  useEffect(() => {
+    localStorage.setItem("filtro", filtro ?? "");
+  }, [filtro]);
+
+  //Filtrar gastos por categoría y agregarlos al State
+  useEffect(() => {
+    if (filtro) {
+      const gastosFiltrados = gastos.filter((gasto) => {
+        return gasto.categoria == filtro;
+      });
+      setGastosCategoria(gastosFiltrados);
+    }
+  }, [filtro, gastos]);
 
   const registrarGastos = (data) => {
-    data.id = gastos.length + 1
-    data.fecha = Date.now()
-    setTimeout(()=>{
-      setGastos([...gastos, data])
-    },1000)
+    /* console.log(data)
+    return */
+    if (data.id != "") {
+      //Editar
+      const gastosActualizados = gastos.map((gastoTemp) => {
+        return gastoTemp.id == data.id ? data : gastoTemp;
+      });
+
+      setTimeout(() => {
+        setGastos(gastosActualizados);
+      }, 500);
+    } else {
+      //Registrar
+      data.id = gastos.length + 1;
+      data.fecha = Date.now();
+      setTimeout(() => {
+        setGastos([...gastos, data]);
+      }, 500);
+    }
   };
 
-  /* const editarGasto = (data) => {
-    //console.log(data);
-    setGastoEdicion(data)
-    setModal(true)
-  } */
+  const eliminarGasto = (id) => {
+    //console.log('Eliminar reg. ', id)
+    const gastosActualizados = gastos.filter((gasto) => {
+      return gasto.id != id;
+    });
+
+    setTimeout(() => {
+      setGastos(gastosActualizados);
+    }, 500);
+  };
+
+  const resetApp = () =>{
+    setPresupuesto(0)
+    setGastos([])
+    setFiltro('')
+    setPresupuestoValido(false)
+    setGastosCategoria([])
+  }
 
   return (
     <WrapPagina>
@@ -42,7 +114,9 @@ function App() {
         setPresupuesto={setPresupuesto}
         presupuestoValido={presupuestoValido}
         setPresupuestoValido={setPresupuestoValido}
-        gastos={gastos}></WrapPresupuesto>
+        gastos={gastos}
+        setResetarApp={setResetarApp}
+        ></WrapPresupuesto>
 
       {presupuestoValido && (
         <>
@@ -61,10 +135,20 @@ function App() {
             setGastoEdicion={setGastoEdicion}
             gastoEdicion={gastoEdicion}></ModalGasto>
 
+          <ModalResetApp
+            resetarApp={resetarApp}
+            setResetarApp={setResetarApp}
+            resetApp={resetApp}
+          ></ModalResetApp>
+
+          <Filtro filtro={filtro} setFiltro={setFiltro}></Filtro>
+
           <Gastos
-          gastos={gastos}
-          setGastoEdicion = {setGastoEdicion}
-          ></Gastos>
+            filtro={filtro}
+            gastosCategoria={gastosCategoria}
+            gastos={gastos}
+            setGastoEdicion={setGastoEdicion}
+            eliminarGasto={eliminarGasto}></Gastos>
         </>
       )}
     </WrapPagina>

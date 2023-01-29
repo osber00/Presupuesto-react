@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { formatearMoneda } from "../helpers";
+import {CircularProgressbar} from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css';
 
-function InfoPresupuesto({ presupuesto, gastos }) {
+function InfoPresupuesto({ presupuesto, gastos, setResetarApp }) {
   const [disponible, setDisponible] = useState(0);
   const [gastado, setGastado] = useState(0);
+  const [porcentaje, setPorcentaje] = useState(0)
 
   useEffect(() => {
     const totalGastos = gastos.reduce(
@@ -11,6 +14,9 @@ function InfoPresupuesto({ presupuesto, gastos }) {
       0
     );
     const totalDisponible = presupuesto - totalGastos;
+    const porcentajeGasto = Number(((presupuesto - totalDisponible)/presupuesto)*100).toFixed(1)
+    setPorcentaje(porcentajeGasto)
+    //console.log(porcentajeGasto)
     /* console.log(typeof totalGastos);
     console.log( typeof totalDisponible); */
     setGastado(totalGastos);
@@ -26,6 +32,8 @@ function InfoPresupuesto({ presupuesto, gastos }) {
         <div>
           <div className='mt-3 text-3xl font-semibold text-white'>
             {formatearMoneda(presupuesto)}
+            {' '}
+            ({porcentaje}%)
           </div>
           <p className='mt-3 text-xs+ text-indigo-100'>
             COP (Pesos colombianos)
@@ -39,7 +47,7 @@ function InfoPresupuesto({ presupuesto, gastos }) {
               <div className='flex h-7 w-7 items-center justify-center rounded-full bg-black/20 text-white'>
                 <i className='fa fa-angle-right'></i>
               </div>
-              <p className='text-base font-medium text-white'>
+              <p className={`text-base font-medium ${disponible < 0 ? 'text-error' : 'text-white'}`}>
                 {formatearMoneda(disponible)}
               </p>
             </div>
@@ -57,6 +65,9 @@ function InfoPresupuesto({ presupuesto, gastos }) {
           </div>
         </div>
       </div>
+      <div className="w-full text-right mt-4">
+            <button onClick={()=>setResetarApp('true')} className="btn btn-xs bg-error font-medium text-white hover:bg-error/30">Resetear App</button>
+          </div>
     </div>
   );
 }

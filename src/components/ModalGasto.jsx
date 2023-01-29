@@ -1,17 +1,21 @@
 import { useEffect,useState } from "react";
 import Alerta from "./Alerta";
 
-function ModalGasto({ modal, setModal, registrarGastos, setGastoEdicion, gastoEdicion }) {
-  const [nombre, setNombre] = useState("");
-  const [cantidad, setCantidad] = useState("");
-  const [categoria, setCategoria] = useState("");
-  const [mensaje, setMensaje] = useState("");
+function ModalGasto({ modal, setModal, registrarGastos, gastoEdicion, setGastoEdicion }) {
+  const [id, setId] = useState("")
+  const [nombre, setNombre] = useState("")
+  const [cantidad, setCantidad] = useState("")
+  const [categoria, setCategoria] = useState("")
+  const [mensaje, setMensaje] = useState("")
+  const [fecha, setFecha] = useState("")
 
   useEffect(()=>{
     if(Object.keys(gastoEdicion).length > 0 ){
+      setId(gastoEdicion.id)
       setNombre(gastoEdicion.nombre)
       setCantidad(gastoEdicion.cantidad)
       setCategoria(gastoEdicion.categoria)
+      setFecha(gastoEdicion.fecha)
     }
   },[gastoEdicion])
 
@@ -21,16 +25,18 @@ function ModalGasto({ modal, setModal, registrarGastos, setGastoEdicion, gastoEd
       setMensaje("Todos los datos son requeridos");
       return
     }
-    const datos = { nombre, cantidad, categoria }
+    const datos = { nombre, cantidad, categoria, id, fecha}
     registrarGastos(datos);
     cerrarModal()
   };
 
   const cerrarModal = () => {
+    setId("")
     setNombre("")
     setCantidad("")
     setCategoria("")
     setMensaje("")
+    setFecha("")
     setModal("false")
     setGastoEdicion({})
   };
@@ -44,7 +50,7 @@ function ModalGasto({ modal, setModal, registrarGastos, setGastoEdicion, gastoEd
       <div className='relative flex w-full max-w-lg origin-top flex-col overflow-hidden rounded-lg bg-white transition-all duration-300 dark:bg-navy-700'>
         <div className='flex justify-between rounded-t-lg  px-4 py-3 dark:bg-navy-800 sm:px-5'>
           <h3 className='text-base font-medium text-slate-700 dark:text-navy-100'>
-            Nuevo Gasto
+            {gastoEdicion.id ? 'Editar Gasto': 'Nuevo Gasto'}
           </h3>
           <button
             onClick={cerrarModal}
@@ -109,12 +115,13 @@ function ModalGasto({ modal, setModal, registrarGastos, setGastoEdicion, gastoEd
                     </label> */}
               <div className='space-x-2 text-right'>
                 <button
+                  type="button"
                   onClick={cerrarModal}
                   className='btn min-w-[7rem] rounded-full border border-slate-300 font-medium text-slate-800 hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-450 dark:text-navy-50 dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90'>
                   Cancelar
                 </button>
-                <button className='btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90'>
-                  Confirmar
+                <button type="submit" className='btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90'>
+                  {gastoEdicion.id ? 'Guardar cambios' : 'Registrar'}
                 </button>
               </div>
             </div>
